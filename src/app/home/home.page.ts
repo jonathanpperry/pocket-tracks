@@ -1,5 +1,36 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonRange } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
+import {
+  IonButton,
+  IonIcon,
+  IonRange,
+  IonCol,
+  IonRow,
+  IonFooter,
+  IonLabel,
+  IonToolbar,
+  IonItem,
+  IonList,
+  IonContent,
+  IonTitle,
+  IonHeader,
+} from '@ionic/angular/standalone';
+import { NgFor, NgIf } from '@angular/common';
+import { addIcons } from 'ionicons';
+import {
+  play,
+  pause,
+  playBackCircleOutline,
+  playForwardCircleOutline
+} from 'ionicons/icons';
+
+addIcons({
+  play,
+  pause,
+  playBackCircleOutline,
+  playForwardCircleOutline
+});
+
 // @ts-ignore
 import { Howl } from 'howler';
 
@@ -11,10 +42,28 @@ export interface Track {
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
-  standalone: false,
-})
+  standalone: true,
+  imports: [
+    NgFor,
+    NgIf,
 
+    // Ionic components
+    FormsModule,
+    IonButton,
+    IonCol,
+    IonContent,
+    IonFooter,
+    IonHeader,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonRange,
+    IonRow,
+    IonTitle,
+    IonToolbar,
+  ],
+})
 export class HomePage implements OnInit {
   playlist: Track[] = null as any;
   loadedPlaylist: Track[] = null as any;
@@ -25,7 +74,7 @@ export class HomePage implements OnInit {
   progress = 0;
   @ViewChild('range', { static: false }) range: IonRange = null as any;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.loadedPlaylist = [
@@ -89,7 +138,7 @@ export class HomePage implements OnInit {
         this.activeTrack = track;
         this.updateProgress();
       },
-      onend: () => { },
+      onend: () => {},
     });
     this.player.play();
   }

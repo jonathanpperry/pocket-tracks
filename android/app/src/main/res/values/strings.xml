@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">audioapp</string>
-    <string name="title_activity_main">audioapp</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Pocket Tracks</string>
+    <string name="title_activity_main">Pocket Tracks</string>
+    <string name="package_name">io.jonnyramen.pockettracks</string>
+    <string name="custom_url_scheme">io.jonnyramen.pockettracks</string>
 </resources>

@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package io.jonnyramen.pockettracks;
 
 import com.getcapacitor.BridgeActivity;
 

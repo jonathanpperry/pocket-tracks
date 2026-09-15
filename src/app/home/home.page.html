@@ -30,6 +30,20 @@
           (mouseup)="seek()"
         ></ion-range>
       </ion-col>
+      <ion-col size="12">
+        <ion-item color="dark">
+          <ion-label>Volume</ion-label>
+
+          <ion-range
+            [(ngModel)]="volume"
+            min="0"
+            max="1"
+            step="0.05"
+            color="success"
+            (ionChange)="saveVolume()"
+          ></ion-range>
+        </ion-item>
+      </ion-col>
       <ion-col size="12" class="ion-text-center">
         <ion-button fill="clear" (click)="prev()" color="light">
           <ion-icon slot="icon-only" name="play-back-circle-outline"></ion-icon>

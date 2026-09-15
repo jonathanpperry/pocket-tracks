@@ -21,14 +21,16 @@ import {
   play,
   pause,
   playBackCircleOutline,
-  playForwardCircleOutline
+  playForwardCircleOutline,
 } from 'ionicons/icons';
+
+import { Preferences } from '@capacitor/preferences';
 
 addIcons({
   play,
   pause,
   playBackCircleOutline,
-  playForwardCircleOutline
+  playForwardCircleOutline,
 });
 
 // @ts-ignore
@@ -72,11 +74,13 @@ export class HomePage implements OnInit {
   player: Howl = null as any;
   isPlaying = false;
   progress = 0;
+  volume = 1;
+
   @ViewChild('range', { static: false }) range: IonRange = null as any;
 
   constructor() {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadedPlaylist = [
       {
         name: 'Funny Song',
@@ -123,23 +127,82 @@ export class HomePage implements OnInit {
         path: './assets/mp3/bensound-adventure.mp3',
       },
     ];
+
     this.initializeSongs();
+    await this.restorePlayerSettings();
   }
 
-  start(track: Track) {
-    if (this.player) {
-      this.player.stop();
-    }
+  private createPlayer(track: Track) {
     this.player = new Howl({
       src: [track.path],
       html5: true,
+      volume: this.volume,
       onplay: () => {
         this.isPlaying = true;
         this.activeTrack = track;
         this.updateProgress();
       },
-      onend: () => {},
+      onpause: () => {
+        this.isPlaying = false;
+      },
+      onstop: () => {
+        this.isPlaying = false;
+      },
+      onend: () => {
+        this.isPlaying = false;
+      },
     });
+  }
+
+  private async restorePlayerSettings() {
+    const { value: savedVolume } = await Preferences.get({
+      key: 'playerVolume',
+    });
+
+    if (savedVolume !== null) {
+      this.volume = Math.min(1, Math.max(0, Number(savedVolume)));
+    }
+
+    const { value: savedTrackPath } = await Preferences.get({
+      key: 'lastTrack',
+    });
+
+    if (!savedTrackPath) {
+      return;
+    }
+
+    const track = this.loadedPlaylist.find(
+      (item) => item.path === savedTrackPath,
+    );
+
+    if (track) {
+      this.activeTrack = track;
+      this.createPlayer(track);
+    }
+  }
+
+  async saveVolume() {
+    this.player?.volume(this.volume);
+
+    await Preferences.set({
+      key: 'playerVolume',
+      value: String(this.volume),
+    });
+  }
+
+  async start(track: Track) {
+    if (this.player) {
+      this.player.stop();
+    }
+
+    this.activeTrack = track;
+    this.createPlayer(track);
+
+    await Preferences.set({
+      key: 'lastTrack',
+      value: track.path,
+    });
+
     this.player.play();
   }
 

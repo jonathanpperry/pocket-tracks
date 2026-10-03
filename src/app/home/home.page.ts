@@ -181,9 +181,11 @@ export class HomePage implements OnInit {
     }
   }
 
-  async saveVolume() {
+  updateVolume() {
     this.player?.volume(this.volume);
+  }
 
+  async saveVolume() {
     await Preferences.set({
       key: 'playerVolume',
       value: String(this.volume),
